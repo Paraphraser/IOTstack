@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # version - MUST be exactly 7 characters!
-UPDATE="2026v01"
+UPDATE="2026v02"
 
 #----------------------------------------------------------------------
 # The intention of this script is that it should be able to be run
@@ -33,12 +33,6 @@ IOTSTACK_ENV="$IOTSTACK/.env"
 IOTSTACK_MENU_REQUIREMENTS="$IOTSTACK/requirements-menu.txt"
 IOTSTACK_MENU_VENV_DIR="$IOTSTACK/.virtualenv-menu"
 IOTSTACK_INSTALLER_HINT="$IOTSTACK/.new_install"
-
-# git cloning options which can be overridden
-# (needs special handling for the null case)
-if [[ ! -v GIT_CLONE_OPTIONS ]] ; then
-	GIT_CLONE_OPTIONS="--filter=tree:0"
-fi
 
 # the expected installation location of docker-compose-plugin is
 COMPOSE_PLUGIN_PATH="/usr/libexec/docker/cli-plugins/docker-compose"
@@ -443,13 +437,8 @@ fi
 # does the IOTstack folder already exist?
 if [ ! -d "$IOTSTACK" ] ; then
 	# no! clone from GitHub
-	if [ -n "$GIT_CLONE_OPTIONS" ] ; then
-		echo -e "\nCloning the IOTstack repository from GitHub using options $GIT_CLONE_OPTIONS"
-		git clone "$GIT_CLONE_OPTIONS" https://github.com/SensorsIot/IOTstack.git "$IOTSTACK"
-	else
-		echo -e "\nCloning the full IOTstack repository from GitHub"
-		git clone https://github.com/SensorsIot/IOTstack.git "$IOTSTACK"
-	fi
+	echo -e "\nCloning IOTstack repository from GitHub"
+	git clone https://github.com/SensorsIot/IOTstack.git "$IOTSTACK"
 	if [ $? -eq 0 -a -d "$IOTSTACK" ] ; then
 		echo "IOTstack cloned successfully into $IOTSTACK"
 	else
