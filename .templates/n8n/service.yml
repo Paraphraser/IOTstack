@@ -1,28 +1,51 @@
 n8n:
-  container_name: "n8n"
+  container_name: n8n
+  image: n8nio/n8n
   restart: unless-stopped
+  depends_on:
+    - n8n_db
+  environment:
+    TZ: ${TZ:-Etc/UTC}
+    GENERIC_TIMEZONE: ${TZ:-Etc/UTC}
+    DB_TYPE: mysql
+    DB_MYSQLDB_DATABASE: ${N8N_DB_NAME:-n8n}
+    DB_MYSQLDB_HOST: n8n_db
+    DB_MYSQLDB_PORT: 3306
+    DB_MYSQLDB_USER: ${N8N_DB_USER:-n8n}
+    DB_MYSQLDB_PASSWORD: ${N8N_DB_PASSWORD:?eg echo N8N_DB_PASSWORD=userPassword >>~/IOTstack/.env}
+    # PGID: 1000
+    # PUID: 1000
+    # USBDEVICES: /dev/ttyAMA0
+    # PACKAGES: mc
+    # Optional to enable authentication
+    # N8N_BASIC_AUTH_ACTIVE: true
+    # N8N_BASIC_AUTH_USER: <USER>
+    # N8N_BASIC_AUTH_PASSWORD: <PASSWORD>
   ports:
     - "5678:5678"
-  image: n8nio/n8n
   stdin_open: true
   volumes:
     - ./volumes/n8n:/home/node/.n8n
-  environment:
-    - TZ=${TZ:-Etc/UTC}
-    # - PGID=1000
-    # - PUID=1000
-    # - USBDEVICES=/dev/ttyAMA0
-    # - PACKAGES=mc
-    # Optional DB and Timezone configs.
-    # - DB_TYPE=mysqldb
-    # - DB_MYSQLDB_DATABASE=<MYSQLDB_DATABASE>
-    # - DB_MYSQLDB_HOST=<MYSQLDB_HOST>
-    # - DB_MYSQLDB_PORT=<MYSQLDB_PORT>
-    # - DB_MYSQLDB_USER=<MYSQLDB_USER>
-    # - DB_MYSQLDB_PASSWORD=<MYSQLDB_PASSWORD>
-    # - GENERIC_TIMEZONE=${TZ:-Etc/UTC}
-    # Optional to enable authentication
-    # - N8N_BASIC_AUTH_ACTIVE=true
-    # - N8N_BASIC_AUTH_USER=<USER>
-    # - N8N_BASIC_AUTH_PASSWORD=<PASSWORD>
+  networks:
+    - default
+    - database
 
+n8n_db:
+  container_name: n8n_db
+  build: ./.templates/mariadb/.
+  restart: unless-stopped
+  environment:
+    TZ: ${TZ:-Etc/UTC}
+    PUID: 1000
+    PGID: 1000
+    MYSQL_ROOT_PASSWORD: ${N8N_DB_ROOT_PASSWORD:?eg echo N8N_DB_ROOT_PASSWORD=rootPassword >>~/IOTstack/.env}
+    MYSQL_DATABASE: ${N8N_DB_NAME:-n8n}
+    MYSQL_USER: ${N8N_DB_USER:-n8n}
+    MYSQL_PASSWORD: ${N8N_DB_PASSWORD:?eg echo N8N_DB_PASSWORD=userPassword >>~/IOTstack/.env}
+  volumes:
+    - ./volumes/gitea/db:/config
+    - ./volumes/gitea/db_backup:/backup
+  networks:
+    - database
+  x-ports:
+    - "3306:3306"
