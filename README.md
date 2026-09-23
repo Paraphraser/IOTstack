@@ -19,7 +19,8 @@ In words:
 2. Node-RED "flows" *subscribe* to the observations, extract the data from the MQTT payloads, and repackage it for insertion into a time-series database managed by InfluxDB.
 3. You use a browser to interact with Grafana, to both create and view dashboards. Grafana generates the queries needed to fetch sensor data from InfluxDB, then constructs charts to summarise your data in visual form.
 
-## about this document { #about }
+<a name="about"></a>
+## about this document
 
 This document describes (yet another) menu system for IOTstack. The original README can be found [here](./README-original.md).
 
@@ -27,7 +28,8 @@ If you are new to IOTstack, you should probably read [Getting Started](./docs/Ba
 
 If you would like to try out this menu, please see [user testing](#user-testing). It explains how to augment an existing IOTstack installation to run this new menu.
 
-## background { #background }
+<a name="background"></a>
+## background
 
 IOTstack was the brainchild of Graham Garner. Deployed in July 2019, Graham's menu system was based on `bash` and `whiptail`. It followed the approach of copying docker compose service definition templates into a staging area, then concatenating the staged files to form the compose file. Users could customise the staged files and run the menu to recreate the compose file. If a template changed *and the user was aware of it*, the user could "pull full service from template" to adopt the revised service definition, albeit at the cost of losing any customisations. There was no inherent support for override files. Graham's original menu is still available on the `old-menu` branch. 
 
@@ -91,7 +93,8 @@ I've long wanted a menu system with the following characteristics:
 
 <hr>
 
-## `iotstack-menu.sh` { #script-intro }
+<a name="script-intro"></a>
+## `iotstack-menu.sh`
 
 The `iotstack-menu.sh` script is a replacement for `menu.sh` (either "old" or "new" menus). In this documentation, it will simply be called *the menu.* As was the case for the previous menus, you should always set your working directory correctly before running the menu:
 
@@ -125,7 +128,8 @@ The menu operates in two modes. When invoked:
 
 In command-line mode, the menu supports `bash` auto-completion. Auto-completion triggers on the command. A command like `./menu.sh` creates some risk of confusion for the auto-completion system so a slightly less ambiguous name is warranted. That's why this version of the menu breaks with tradition and uses `./iotstack-menu.sh` instead.
 
-## quick tour { #menu-tour }
+<a name="menu-tour"></a>
+## quick tour
 
 Launching the menu without arguments displays the main menu:
 
@@ -150,7 +154,8 @@ You can leave the menu by:
 
 The same basic navigation patterns apply to most menu screens.
    
-### services menu { #services-menu }
+<a name="services-menu"></a>
+### services menu
 
 Choosing "Services" displays the list of services (*Docker* containers) supported by IOTstack:
 
@@ -179,7 +184,8 @@ The equivalent command in the CLI is:
 $ ./iotstack-menu.sh status
 ```
 
-#### service install { #control-menu-install }
+<a name="control-menu-install"></a>
+#### service install
 
 Suppose you want to install Gitea. Place the cursor on that service and press <kbd>enter</kbd>. The only option is to "Install" the service:
 
@@ -199,7 +205,8 @@ The equivalent CLI command is:
 $ ./iotstack-menu.sh install gitea
 ```
 
-#### service control { #control-menu-installed }
+<a name="control-menu-installed"></a>
+#### service control
 
 If you re-select Gitea in the Services menu ([Figure&nbsp;3](#figure3)), the Control menu adapts to reflect the fact that Gitea is installed:
 
@@ -255,7 +262,8 @@ It should be apparent that the contents of the Services ([Figure&nbsp;3](#figure
 
 * the Control menu ([Figure&nbsp;5](#figure5)) will replace "Deactivate" with "Activate".
 
-#### service configuration { #control-menu-configure }
+<a name="control-menu-configure"></a>
+#### service configuration
 
 Node-RED is an example of a container that is configurable. Assuming Node-RED is installed, its Control menu will include a "Configure" option:
 
@@ -283,7 +291,8 @@ $ ./iotstack-menu.sh configure nodered
 
 You can use <kbd><!--up arrow-->&#x2B61;</kbd> and <kbd><!--down arrow-->&#x2B63;</kbd>, plus <kbd>space</kbd> to toggle add-on nodes. When you are finished, choosing "Ok" will save your choices and return you to the Services menu ([Figure&nbsp;3](#figure3)).
 
-### build menu { #build-menu }
+<a name="build-menu"></a>
+### build menu
 
 Choosing "Build" assembles your compose and override files, and displays the following to confirm that the job has been done:
 
@@ -309,9 +318,11 @@ You can then start your stack with:
 $ docker compose up -d
 ```
 
-## command-line verbs { #cli-mode }
+<a name="cli-mode"></a>
+## command-line verbs
 
-### activate { #verb-activate }
+<a name="verb-activate"></a>
+### activate
 
 Usage:
 
@@ -327,7 +338,8 @@ Warning: «service» is not inactive
 
 > Apologies for the double-negative in `not inactive` but it's precise.
 
-### build { #verb-build }
+<a name="verb-build"></a>
+### build
 
 Builds your stack.
 
@@ -339,7 +351,8 @@ $ ./iotstack-menu.sh build
 
 See also the [build process](./docs/Developers/BuildStack-Services.md).
 
-### configure { #verb-configure }
+<a name="verb-configure"></a>
+### configure
 
 Usage:
 
@@ -355,7 +368,8 @@ If the service is not configurable, exits with:
 Warning: «service» is not configurable
 ```
 
-### deactivate { #verb-deactivate }
+<a name="verb-deactivate"></a>
+### deactivate
 
 Usage:
 
@@ -371,7 +385,8 @@ Warning: «service» is not active
 
 Deactivation does not change anything in the service's sub-directory. It is a change of status in the internal database which prevents the service from being included the next time you [build](#verb-build) your stack.
 
-### help { #verb-help }
+<a name="verb-help"></a>
+### help
 
 Usage:
 
@@ -381,7 +396,8 @@ $ ./iotstack-menu.sh help
 
 Displays a list of available commands.
 
-### inspect { #verb-inspect }
+<a name="verb-inspect"></a>
+### inspect
 
 Usage:
 
@@ -395,7 +411,8 @@ Note:
 
 * A service's `menu-config.json` will only make it into the database in the first place if SQLite3 is able to parse the file successfully. Being retrieved and displayed by `jq` represents an additional level of syntactic validation.
 
-### install { #verb-install }
+<a name="verb-install"></a>
+### install
 
 Usage:
 
@@ -415,7 +432,8 @@ Tip:
 	$ docker compose up -d
 	```
 
-### reinstall { #verb-reinstall }
+<a name="verb-reinstall"></a>
+### reinstall
 
 Usage:
 
@@ -425,7 +443,8 @@ $ ./iotstack-menu.sh reinstall «service» {«service»...}
 
 This is a shortcut for `uninstall` followed by `install`. The result will always be an installed active service, irrespective of whether the service was or was not active beforehand. Please read [`uninstall`](#verb-uninstall) to understand which files are removed, renamed, or ignored.
 
-### reload { #verb-reload }
+<a name="verb-reload"></a>
+### reload
 
 Usage:
 
@@ -435,7 +454,8 @@ $ ./iotstack-menu.sh reload
 
 Performs service discovery and updates the internal database. The menu mostly reloads the database automatically when necessary. However, you will need to invoke this command yourself if you are developing a new service.
 
-### renovate { #verb-renovate }
+<a name="verb-renovate"></a>
+### renovate
 
 Key concepts:
 
@@ -491,7 +511,8 @@ Note:
 
 * Confining your customiastions to the corresponding override files reduces your workload considerably.
 
-### repair { #verb-repair }
+<a name="verb-repair"></a>
+### repair
 
 Usage:
 
@@ -504,7 +525,8 @@ The `install` and `repair` verbs actually have **identical** behaviour. The reas
 * [Figure&nbsp;4](#figure4) where Gitea is uninstalled, so it makes sense for the menu to present the "Install" option;
 * [Figure&nbsp;5](#figure5) where Gitea is already installed, so it makes sense for the menu to present the "Repair" option.
 
-### services { #verb-services }
+<a name="verb-services"></a>
+### services
 
 ``` console
 $ ./iotstack-menu.sh services
@@ -519,7 +541,8 @@ Each service carries a prefix as follows:
 * `I:` service is installed but is marked inactive (will not be included in `docker-compose.yml` on each [build](#verb-build)).
 * `U:` service status is unknown. This is an internal error.
 
-### status { #verb-status }
+<a name="verb-status"></a>
+### status
 
 Usage:
 
@@ -556,7 +579,8 @@ $ ./iotstack-menu.sh status chronograf nodered
  Configurable: yes
 ```
 
-### uninstall { #verb-uninstall }
+<a name="verb-uninstall"></a>
+### uninstall
 
 Usage:
 
@@ -574,7 +598,8 @@ If a service's sub-directory winds up being empty, it is removed.
 
 What this means in practice is that customisations should survive both an `uninstall` and a [`reinstall`](#verb-reinstall). However, you may need to compare re-installed files with their `.save` variants, and manually re-apply your customisations to the active files.
 
-### update { #verb-update }
+<a name="verb-update"></a>
+### update
 
 Key concepts:
 
@@ -589,7 +614,8 @@ $ ./iotstack-menu.sh update
 
 This command checks to see whether any installed service (either active or inactive) can be upgraded.
 
-### upgrade { #verb-upgrade }
+<a name="verb-upgrade"></a>
+### upgrade
 
 Usage:
 
@@ -605,7 +631,8 @@ If those commit&nbsp;IDs differ then it is implied that the **copy** that was ma
 
 Files that are not tracked are never upgraded. If you delete an untracked file from a service's sub-directory then you can get a new copy using [`repair`](#verb-repair).
 
-### bashcompletions { #verb-bashcompletions }
+<a name="verb-bashcompletions"></a>
+### bashcompletions
 
 ``` console
 $ ./iotstack-menu.sh bashcompletions
@@ -628,7 +655,8 @@ $ ./iotstack-menu.sh bashcompletions | sudo tee /etc/bash_completion.d/iotstack_
 
 You need to logout and login again before the handler takes effect.
 
-## file copying { #rsync-actions }
+<a name="rsync-actions"></a>
+## file copying
 
 [Table&nbsp;1](#table1) summarises the actions taken by the various commands that involve copying files:
 
@@ -641,7 +669,8 @@ The "upgrade" verb applies to each *service* as a whole. At least one of the ser
 * If there is no existing "installed" version, then the missing file is copied from the template; otherwise
 * The "installed" version is compared with its template. If the files differ, then the existing file is renamed with a `.save` extension and replaced with a copy of the template. 
 
-### rsync flags { #rsync-flags }
+<a name="rsync-flags"></a>
+### rsync flags
 
 The menu uses `rsync` to copy files. That command produces summary lines that look like this:
 
@@ -665,7 +694,8 @@ To put this another way, if a renovation or upgrade produces a summary line but 
 1. The destination file did not exist when the copy occurred (ie there was nothing to rename as `.save`).
 2. The contents of the source and destination files were the same but some other attributes, such as modification times or permissions did not match. Harmonising attributes does not involve replacing the destination file so `rsync` doesn't create a `.save` file.
 
-## user testing { #user-testing }
+<a name="user-testing"></a>
+## user testing
 
 I am publishing this on GitHub at [Paraphraser/IOTstack](https://github.com/Paraphraser/IOTstack). I don't want to turn it into a pull request for [SensorsIot/IOTstack](https://github.com/SensorsIot/IOTstack) until the maker community has had a chance to try it out, report bugs, raise issues, and otherwise provide me with some feedback.
 
@@ -720,7 +750,8 @@ $ git branch -D iotstack-menu
 $ git remote remove paraphraser
 ```
 
-## see also { #references }
+<a name="references"></a>
+## see also
 
 This section contains links to the IOTstack documentation, as amended for this menu. This avoids the need to create a separate version of the IOTstack Wiki. The need for this section will go away if this menu gains sufficient popularity to take it mainstream.
 
@@ -755,6 +786,7 @@ This section contains links to the IOTstack documentation, as amended for this m
 
 	- [AdGuardHome](docs/Containers/AdGuardHome.md)
 	- [Adminer](docs/Containers/Adminer.md)
+	- [APTCacherNG](docs/Containers/APTCacherNG.md)
 	- [Blynk_server](docs/Containers/Blynk_server.md)
 	- [Chronograf](docs/Containers/Chronograf.md)
 	- [DashMachine](docs/Containers/DashMachine.md)
@@ -773,6 +805,7 @@ This section contains links to the IOTstack documentation, as amended for this m
 	- [Homer](docs/Containers/Homer.md)
 	- [InfluxDB](docs/Containers/InfluxDB.md)
 	- [InfluxDB2](docs/Containers/InfluxDB2.md)
+	- [Jellyfin](docs/Containers/Jellyfin.md)
 	- [Kapacitor](docs/Containers/Kapacitor.md)
 	- [MariaDB](docs/Containers/MariaDB.md)
 	- [MJPEG-Streamer](docs/Containers/MJPEG-Streamer.md)
@@ -795,9 +828,11 @@ This section contains links to the IOTstack documentation, as amended for this m
 	- [RTL_433](docs/Containers/RTL_433-docker.md)
 	- [Scrypted](docs/Containers/Scrypted.md)
 	- [Syncthing](docs/Containers/Syncthing.md)
+	- [Tailscale](docs/Containers/Tailscale.md)
 	- [TasmoAdmin](docs/Containers/TasmoAdmin.md)
 	- [Telegraf](docs/Containers/Telegraf.md)
 	- [Timescaledb](docs/Containers/Timescaledb.md)
+	- [Vaultwarden](docs/Containers/Vaultwarden.md)
 	- [WireGuard](docs/Containers/WireGuard.md)
 	- [WordPress](docs/Containers/WordPress.md)
 	- [X2go](docs/Containers/X2go.md)
