@@ -684,7 +684,7 @@ What does all that stuff on the left hand side mean? To save you wading through 
 |:--------------------------------------------:|
 |![rsync flags](./docs/images/rsync-flags.png) |
 
-The menu only uses `rsync` to copy files (not directories), and copying operations are local, so the first two characters will typically be `>f`. During renovations and upgrades, `rsync` will only produce a `.save` file if both of the following conditions are met:
+The menu mostly uses `rsync` to copy files and copying operations are local, so the first two characters will typically be `>f`. During renovations and upgrades, `rsync` will only produce a `.save` file if both of the following conditions are met:
 
 1. The destination file already exists; and
 2. The checksums and/or sizes of the source and destination files don't match.
